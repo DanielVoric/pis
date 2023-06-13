@@ -15,7 +15,7 @@ class Goods(db.Entity):
     quantity = Required(int)
     type = Required(str)
     entry_date = Required(datetime)
-    release_date = Optional(datetime)
+    exit_date = Optional(datetime)
 
 db.generate_mapping(create_tables=True)
 
@@ -32,7 +32,7 @@ def add_goods():
         quantity=int(data['quantity']),  
         type=data['type'],
         entry_date=datetime.strptime(data['entry_date'], '%Y-%m-%d'),
-        release_date=datetime.strptime(data['release_date'], '%Y-%m-%d') if data.get('release_date') else None
+        exit_date=datetime.strptime(data['exit_date'], '%Y-%m-%d') if data.get('exit_date') else None
     )
     db.commit()
     return jsonify(success=True, id=good.id)
@@ -49,7 +49,7 @@ def get_good(good_id):
         quantity=good.quantity,
         type=good.type,
         entry_date=good.entry_date.strftime('%Y-%m-%d'),
-        release_date=good.release_date.strftime('%Y-%m-%d') if good.release_date else None
+        exit_date=good.exit_date.strftime('%Y-%m-%d') if good.exit_date else None
     )
 
 @app.route('/goods/<int:good_id>', methods=['PUT'])
@@ -63,7 +63,7 @@ def update_good(good_id):
     good.quantity = int(data.get('quantity', good.quantity))  
     good.type = data.get('type', good.type)
     good.entry_date = datetime.strptime(data.get('entry_date', good.entry_date.strftime('%Y-%m-%d')), '%Y-%m-%d')
-    good.release_date = datetime.strptime(data.get('release_date', good.release_date.strftime('%Y-%m-%d') if good.release_date else None), '%Y-%m-%d') if data.get('release_date') else None
+    good.exit_date = datetime.strptime(data.get('exit_date', good.exit_date.strftime('%Y-%m-%d') if good.exit_date else None), '%Y-%m-%d') if data.get('exit_date') else None
     db.commit()
     return jsonify(success=True)
 
@@ -103,4 +103,4 @@ def get_goods():
     return jsonify(goods_list)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
